@@ -2,22 +2,22 @@ import os
 from google import genai
 from dotenv import load_dotenv
 
-# 1. Carrega as variáveis de ambiente do arquivo .env
+# 1. Carrega as variáveis de ambiente do arquivo .env (para teste local)
 load_dotenv()
 
 # 2. Busca a chave de forma segura
-# Se a chave não existir no .env ou no sistema, o código avisará o erro
+# No Streamlit Cloud, ele buscará automaticamente nos "Secrets"
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_KEY:
-    raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada. Verifique seu arquivo .env")
+    raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada. Verifique as configurações.")
 
 # 3. Inicializa o cliente do Gemini
 client = genai.Client(api_key=API_KEY)
 
 def analisar_feedback(texto):
     """
-    Envia o feedback para o modelo Gemini 2.0 Flash e retorna
+    Envia o feedback para o modelo Gemini e retorna
     uma análise estruturada em formato JSON.
     """
     
@@ -37,8 +37,9 @@ def analisar_feedback(texto):
     """
     
     try:
+        # Ajustado para gemini-1.5-flash para maior estabilidade de cota
         response = client.models.generate_content(
-            model="models/gemini-1.5-flash",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         
