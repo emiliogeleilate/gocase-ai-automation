@@ -37,25 +37,24 @@ def analisar_feedback(texto):
     """
     
     try:
-        # Ajustado para gemini-1.5-flash para maior estabilidade de cota
+        # CORREÇÃO: Usar apenas o nome do modelo sem o prefixo "models/"
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash", 
             contents=prompt
         )
         
-        # Retorna o texto gerado pela IA (que deve ser o JSON)
+        # Retorna o texto gerado pela IA
         return response.text
         
     except Exception as e:
-        # Tratamento para erro de limite de cota (429) ou erro de rede
         error_msg = str(e)
         if "429" in error_msg:
-            return '{"erro": "Limite de requisições (Quota) atingido. Tente novamente em 60 segundos."}'
+            return '{"erro": "Limite de requisições atingido. Tente novamente em 60 segundos."}'
         return f'{{"erro": "Ocorreu um erro na análise: {error_msg}"}}'
 
 # Bloco para testar o script individualmente via terminal
 if __name__ == "__main__":
-    test_feedback = "Meu pedido #12345 está atrasado há 5 dias e ninguém me responde no chat!"
+    test_feedback = "Meu pedido está atrasado e ninguém me responde!"
     print("Iniciando análise de teste...")
     resultado = analisar_feedback(test_feedback)
     print(resultado)
